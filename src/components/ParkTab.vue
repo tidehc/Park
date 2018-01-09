@@ -1,5 +1,5 @@
 <template>
-    <mu-flexbox orient="vertical" align="stretch" class="park-tab" >
+    <mu-flexbox orient="vertical" align="stretch" class="park-tab">
         <div class="canvas-box" id="canvas-box" style="background-color: seagreen">
         </div>
         <div>
@@ -13,14 +13,13 @@
                 <mu-badge content="12" color="blue" slot="after"/>
             </mu-menu-item>
             <div v-if="!parkStatus">
-                <input type="file" accept="image/*" capture="camera">
-                <mu-raised-button class="button-box" label="扫码停车哦" @click="openParkSheet" fullWidth primary/>
+                <mu-raised-button class="button-box" node-type="qr-btn" label="扫码停车哦"  fullWidth primary/>
             </div>
             <div v-else>
                 <mu-raised-button class="button-box" label="扫码定位当前位置" fullWidth primary/>
                 <mu-raised-button class="button-box" label="结账开走" @click="openPaySheet" fullWidth primary/>
             </div>
-
+            <input id="car" node-type="jsbridge" type="file" name="myPhoto" value="扫描二维码1"  v-show="false">
         </div>
         <mu-bottom-sheet :open="parkSheet" @close="closeParkSheet">
             <mu-sub-header>
@@ -58,7 +57,7 @@
 </template>
 
 <script>
-
+    import Qrcode from '../assets/js/qrcode'
     export default {
         name: '',
         data() {
@@ -67,36 +66,48 @@
                 parkSheet: false,
                 paySheet: false,
                 pos: 12,
-                toast:false
+                toast: false,
+                cameraInput: null
             }
         },
         mounted: function () {
+            $(function () {
+                Qrcode.init($('[node-type=qr-btn]'));
+            });
+            this.cameraInput = document.getElementById('car')
         },
         methods: {
             park(pos) {
                 this.showToast()
                 this.closeParkSheet()
-                this.parkStatus=true
+                this.parkStatus = true
             },
-            pay(){
+            pay() {
 
+            },
+            openCamera() {
+                this.cameraInput.click()
             },
             closeParkSheet() {
                 this.parkSheet = false
             },
             openParkSheet() {
-                this.parkSheet = true
+                if (this.cameraInput.files.length === 1) {
+                    this.parkSheet = true
+                }
             },
-            showToast () {
+            showToast() {
                 this.toast = true
                 if (this.toastTimer) clearTimeout(this.toastTimer)
-                this.toastTimer = setTimeout(() => { this.toast = false }, 2000)
+                this.toastTimer = setTimeout(() => {
+                    this.toast = false
+                }, 2000)
             },
-            openPaySheet(){
-                this.paySheet=true
+            openPaySheet() {
+                this.paySheet = true
             },
-            closePaySheet(){
-                this.paySheet=false
+            closePaySheet() {
+                this.paySheet = false
             }
         }
     }
