@@ -13,10 +13,11 @@
                 <mu-badge content="12" color="blue" slot="after"/>
             </mu-menu-item>
             <div v-if="!parkStatus">
+                <input type="file" accept="image/*" capture="camera">
                 <mu-raised-button class="button-box" label="扫码停车哦" @click="openParkSheet" fullWidth primary/>
             </div>
             <div v-else>
-                <mu-raised-button class="button-box" label="扫码定位当前位置" @click="openPaySheet" fullWidth primary/>
+                <mu-raised-button class="button-box" label="扫码定位当前位置" fullWidth primary/>
                 <mu-raised-button class="button-box" label="结账开走" @click="openPaySheet" fullWidth primary/>
             </div>
 
